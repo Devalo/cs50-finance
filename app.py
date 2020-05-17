@@ -45,6 +45,11 @@ if not os.environ.get("API_KEY"):
 def index():
     """Show portfolio of stocks"""
     return apology("TODO")
+    #Display a table with all of the current user stock,
+    # the number of shares of each, the current price of 
+    # each stock, and the total value of each holding.
+
+    # Display the users current cash balance
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -52,6 +57,9 @@ def index():
 def buy():
     """Buy shares of stock"""
     return apology("TODO")
+    # When requested via GET, should display form to buy a stock
+    # When form is submitted via POST, purchase the stock so long
+    # as the user can afford it.
 
 
 @app.route("/history")
@@ -59,6 +67,9 @@ def buy():
 def history():
     """Show history of transactions"""
     return apology("TODO")
+
+    # Display a table with history of all transactions,
+    # listing row by row every buy and every sell
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -114,12 +125,18 @@ def logout():
 def quote():
     """Get stock quote."""
     return apology("TODO")
+    # When requested via GET, should display form to request a stock rate
+    # When form is submitted via POST, lookup the stock symbol by calling
+    # the lookup function, and display the results
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
     return apology("TODO")
+    # When requested via GET, should display registration form
+    # When form is submitted via POST, insert the new user into users table
+    # Be sure to check for invalid inputs, and hash the user password
 
 
 @app.route("/sell", methods=["GET", "POST"])
@@ -127,6 +144,11 @@ def register():
 def sell():
     """Sell shares of stock"""
     return apology("TODO")
+    
+    # When requested via GET, should display form to sell a stock.
+
+    # When form is submitted via POST, sell the spcified number of shares of stock.
+    # and update the users cach
 
 
 def errorhandler(e):
