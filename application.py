@@ -26,6 +26,8 @@ def after_request(response):
 # Custom filter
 app.jinja_env.filters["usd"] = usd
 
+
+
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
@@ -45,8 +47,10 @@ if not os.environ.get("API_KEY"):
 def index():
     """Show portfolio of stocks"""
 
+    user_shares = db.execute("SELECT * FROM stocks WHERE user_id = :user_id", user_id=session["user_id"])
 
-    return render_template("index.html")
+
+    return render_template("index.html", shares=user_shares, lookup=lookup)
 
 
 

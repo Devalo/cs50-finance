@@ -18,14 +18,18 @@
             </tr>
         </thead>
         <tbody>
+
+            {% for share in shares: %}
+
             <tr>
-                <td>TEST</td>
-                <td>TESTNAVN</td>
-                <td>6</td>
-                <td>100</td>
-                <td>200</td>
-                <td>300</td>
+                <td>{{share.symbol}}</td>
+                <td>{{share.name}}</td>
+                <td>{{share.amount}}</td>
+                <td>${{share.price}}</td>
+                <td>{{lookup(share.symbol)["price"]}}</td>
+                <td>${{lookup(share.symbol)["price"] * share.amount}}</td>
             </tr>
+            {% endfor %}
             <tr>
                 <td>CASH</td>
                 <td></td>
