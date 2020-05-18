@@ -48,9 +48,19 @@ def index():
     """Show portfolio of stocks"""
 
     user_shares = db.execute("SELECT * FROM stocks WHERE user_id = :user_id", user_id=session["user_id"])
+    cash_amount = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
 
+    tot = []
+    for cash in user_shares:
+        i =lookup(cash["symbol"])
+        j = i["price"]
+        a = cash["amount"]
+        k = j * a
 
-    return render_template("index.html", shares=user_shares, lookup=lookup)
+        tot.append(k)
+    print(cash_amount[0]["cash"])
+
+    return render_template("index.html", shares=user_shares, lookup=lookup, total=round(sum(tot), 2), cash_left=cash_amount[0]["cash"])
 
 
 
@@ -85,6 +95,8 @@ def buy():
             return apology("Insufficient founds.")
         else:
             db.execute("INSERT INTO stocks (name, symbol, amount, price, user_id) VALUES (:name, :symbol, :amount, :price, :user_id)", name=share_name, symbol=symbol, amount=amount, price=share_price, user_id=session["user_id"])
+            new_amount = cash_amount - total
+            db.execute("UPDATE users SET cash = :new_total WHERE id = :user_id", new_total=new_amount, user_id=session["user_id"])
             return redirect("/")
 
     else:
