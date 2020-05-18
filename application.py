@@ -60,7 +60,7 @@ def index():
         tot.append(k)
     print(cash_amount[0]["cash"])
 
-    return render_template("index.html", shares=user_shares, lookup=lookup, total=round(sum(tot), 2), cash_left=cash_amount[0]["cash"])
+    return render_template("index.html", shares=user_shares, lookup=lookup, total=round(sum(tot), 2), cash_left=round(cash_amount[0]["cash"], 2))
 
 
 

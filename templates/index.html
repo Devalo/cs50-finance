@@ -25,7 +25,7 @@
                 <td>{{share.symbol}}</td>
                 <td>{{share.name}}</td>
                 <td>{{share.amount}}</td>
-                <td>${{share.price}}</td>
+                <td>${{share.price|round}}</td>
                 <td>{{lookup(share.symbol)["price"]}}</td>
                 <td>${{lookup(share.symbol)["price"] * share.amount}}</td>
             </tr>
@@ -44,7 +44,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><strong>{{ cash_left }}</strong></td>
+                <td><strong>{{ cash_left + total }}</strong></td>
             </tr>
         </tbody>
     </table>
