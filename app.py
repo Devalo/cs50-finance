@@ -1,4 +1,5 @@
 import os
+import datetime
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
@@ -6,6 +7,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
+
 
 from helpers import apology, login_required, lookup, usd
 
@@ -58,7 +60,6 @@ def index():
         k = j * a
 
         tot.append(k)
-    print(cash_amount[0]["cash"])
 
     return render_template("index.html", shares=user_shares, lookup=lookup, total=round(sum(tot), 2), cash_left=round(cash_amount[0]["cash"], 2))
 
@@ -211,10 +212,40 @@ def sell():
 
     stocks = db.execute("SELECT id, symbol FROM stocks WHERE user_id = :user_id", user_id=session["user_id"])
 
-    for stock in stocks:
-        print(stock["symbol"])
-    
-    return render_template("sell.html", stocks=stocks)
+    if request.method == "POST":
+
+        stock_to_sell = request.form.get("symbol")
+        amount_to_sell = request.form.get("amount")
+        stocks_available = db.execute("SELECT amount FROM stocks WHERE user_id = :user_id AND id = :stock_id", user_id=session["user_id"], stock_id=stock_to_sell)
+        if stock_to_sell == None:
+            return apology("No stock selected")
+        elif amount_to_sell == None or int(amount_to_sell) <= 0:
+            return apology("Amount must be present, and over 0")
+        else:
+            if stocks_available[0]["amount"] < int(amount_to_sell):
+                return apology("Not enough stocks")
+            else:
+                selected_stock = db.execute("SELECT * FROM stocks WHERE user_id = :user_id AND id = :stock_id", user_id=session["user_id"], stock_id=stock_to_sell)
+                user_cash = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
+                price = selected_stock[0]["price"] * int(amount_to_sell)
+                date = datetime.datetime.now()
+                date_format = date.strftime("%d-%m-%y %H:%M:%S")
+
+                db.execute("UPDATE stocks SET amount = :new_val WHERE user_id = :user_id", new_val=stocks_available[0]["amount"]-int(amount_to_sell), user_id=session["user_id"])
+                db.execute("UPDATE users SET cash = :new_val WHERE id = :user_id", new_val=user_cash[0]["cash"]+price, user_id=session["user_id"])
+
+                db.execute("INSERT INTO history (symbol, amount, price, date, user_id) VALUES (:symbol, :amount, :price, :date, :user_id)", symbol=selected_stock[0]["symbol"], amount=int(amount_to_sell), price=price, date=date_format, user_id=session["user_id"])
+
+
+                amount_left = db.execute("SELECT' amount FROM stocks WHERE user_id = :user_id AND id = :stock_id", user_id=session["user_id"], stock_id=stock_to_sell)
+               # print(amount_left)
+                if amount_left == 0:
+                    db.execute("UPDATE stocks SET is_sold = :new_val WHERE user_id = :user_id AND id = :stock_id ", new_val = 1, user_id=session["user_id"], stock_id=stock_to_sell)
+                
+                return redirect("/")
+
+    else:
+        return render_template("sell.html", stocks=stocks)
 
     # When requested via GET, should display form to sell a stock.
 

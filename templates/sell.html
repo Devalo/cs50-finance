@@ -6,16 +6,16 @@
 
 {% block main %}
     <h3>Sell stocks</h3>
-    <form action="/buy" method="post">
+    <form action="/sell" method="post">
         <div class="form-group">
             <select name="symbol" id="select-stock" class="form-control">
                 {% for stock in stocks: %}
                 <option value='{{stock["id"]}}'>{{ stock["symbol"].upper() }} | {{stocks|count}} stocks available </option>
                 {% endfor %}
-                
             </select>
-            
-            
+        </div>
+        <div class="form-group">
+            <input type="number" name="amount" class="form-control">
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Sell</button>
