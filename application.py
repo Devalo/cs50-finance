@@ -58,13 +58,20 @@ def buy():
     """Buy shares of stock"""
     if request.method == "POST":
         symbol = request.form.get("symbol")
-        amount = request.form.get("amount")
+        amount = int(request.form.get("amount"))
+
         if symbol == "":
             return apology("Symbol field cannot be blank")
-        if amount == "":
-            return apology("Amount field cannot be blank")
-        print(symbol, amount)
-        return apology("TODO")
+        if amount == "" or amount <= 0:
+            return apology("Amount field cannot be blank and must be over 0")
+
+        get_share = lookup(symbol)
+        share_name = get_share["name"]
+        share_price = get_share["price"]
+        cash_amount = check_user_cash_amount()
+        print(cash_amount)
+
+        return redirect("/")
     else:
         return render_template("buy.html")
     # When requested via GET, should display form to buy a stock
@@ -110,6 +117,7 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
+        session["username"] = rows[0]["username"]
 
         # Redirect user to home page
         return redirect("/")
@@ -199,3 +207,7 @@ def check_if_user_already_exists(username):
         return True
     else:
         return False
+
+def check_user_cash_amount():
+    row = db.execute("SELECT cash FROM users WHERE username = :username", username=session["username"])
+    return row[0]["cash"]
