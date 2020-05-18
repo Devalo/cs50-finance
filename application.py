@@ -56,7 +56,17 @@ def index():
 @login_required
 def buy():
     """Buy shares of stock"""
-    return apology("TODO")
+    if request.method == "POST":
+        symbol = request.form.get("symbol")
+        amount = request.form.get("amount")
+        if symbol == "":
+            return apology("Symbol field cannot be blank")
+        if amount == "":
+            return apology("Amount field cannot be blank")
+        print(symbol, amount)
+        return apology("TODO")
+    else:
+        return render_template("buy.html")
     # When requested via GET, should display form to buy a stock
     # When form is submitted via POST, purchase the stock so long
     # as the user can afford it.
@@ -126,6 +136,7 @@ def quote():
     """Get stock quote."""
     if request.method == "POST":
         symbol = request.form.get("symbol")
+
         get_symbol = lookup(symbol)
         share_name = get_symbol["name"]
         share_price = get_symbol["price"]
