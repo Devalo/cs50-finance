@@ -69,9 +69,14 @@ def buy():
         share_name = get_share["name"]
         share_price = get_share["price"]
         cash_amount = check_user_cash_amount()
-        print(cash_amount)
 
-        return redirect("/")
+        total = amount * share_price
+        if cash_amount < total:
+            return apology("Insufficient founds.")
+        else:
+            db.execute("INSERT INTO stocks (name, symbol, amount, price, user_id) VALUES (:name, :symbol, :amount, :price, :user_id)", name=share_name, symbol=symbol, amount=amount, price=share_price, user_id=session["user_id"])
+            return redirect("/")
+
     else:
         return render_template("buy.html")
     # When requested via GET, should display form to buy a stock
