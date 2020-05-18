@@ -139,10 +139,13 @@ def register():
         password_confirmation = request.form.get("password_confirmation")
         if password != password_confirmation:
             return apology("Passwords dont match", 401)
-        password_hash = generate_password_hash(password)
-        db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)", username=username, hash=password_hash)
 
-        return redirect("/")
+        if check_if_user_already_exists(username) == False:
+            password_hash = generate_password_hash(password)
+            db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)", username=username, hash=password_hash)
+
+            return redirect("/")
+        else: return apology("Username already exists")
 
     else:
         return render_template("register.html")
@@ -174,3 +177,11 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
+# Checks if a username is already in the database
+def check_if_user_already_exists(username):
+    rows = db.execute("SELECT * FROM users WHERE username = :username", username=username)
+    if len(rows) != 0:
+        return True
+    else:
+        return False
