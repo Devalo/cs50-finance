@@ -133,9 +133,21 @@ def quote():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-    return render_template("register.html")
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        password_confirmation = request.form.get("password_confirmation")
+        if password != password_confirmation:
+            return apology("Passwords dont match", 401)
+        password_hash = generate_password_hash(password)
+        db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)", username=username, hash=password_hash)
 
-    # When requested via GET, should display registration form 
+        return redirect("/")
+
+    else:
+        return render_template("register.html")
+
+    # When requested via GET, should display registration form
     # When form is submitted via POST, insert the new user into users table
     # Be sure to check for invalid inputs, and hash the user password
 
