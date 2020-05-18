@@ -46,7 +46,7 @@ def index():
     """Show portfolio of stocks"""
     return apology("TODO")
     #Display a table with all of the current user stock,
-    # the number of shares of each, the current price of 
+    # the number of shares of each, the current price of
     # each stock, and the total value of each holding.
 
     # Display the users current cash balance
@@ -133,8 +133,9 @@ def quote():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-    return apology("TODO")
-    # When requested via GET, should display registration form
+    return render_template("register.html")
+
+    # When requested via GET, should display registration form 
     # When form is submitted via POST, insert the new user into users table
     # Be sure to check for invalid inputs, and hash the user password
 
@@ -144,7 +145,7 @@ def register():
 def sell():
     """Sell shares of stock"""
     return apology("TODO")
-    
+
     # When requested via GET, should display form to sell a stock.
 
     # When form is submitted via POST, sell the spcified number of shares of stock.
