@@ -208,7 +208,13 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
+
+    stocks = db.execute("SELECT id, symbol FROM stocks WHERE user_id = :user_id", user_id=session["user_id"])
+
+    for stock in stocks:
+        print(stock["symbol"])
+    
+    return render_template("sell.html", stocks=stocks)
 
     # When requested via GET, should display form to sell a stock.
 
