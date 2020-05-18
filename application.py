@@ -125,7 +125,7 @@ def logout():
 def quote():
     """Get stock quote."""
     if request.method == "POST":
-       return apoligy("TODO")
+       return apology("TODO")
     else:
         return render_template("quote.html")
 
