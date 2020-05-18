@@ -124,7 +124,11 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    return apology("TODO")
+    if request.method == "POST":
+       return apoligy("TODO")
+    else:
+        return render_template("quote.html")
+
     # When requested via GET, should display form to request a stock rate
     # When form is submitted via POST, lookup the stock symbol by calling
     # the lookup function, and display the results
@@ -143,17 +147,11 @@ def register():
         if check_if_user_already_exists(username) == False:
             password_hash = generate_password_hash(password)
             db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)", username=username, hash=password_hash)
-
             return redirect("/")
         else: return apology("Username already exists")
 
     else:
         return render_template("register.html")
-
-    # When requested via GET, should display registration form
-    # When form is submitted via POST, insert the new user into users table
-    # Be sure to check for invalid inputs, and hash the user password
-
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
