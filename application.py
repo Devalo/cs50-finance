@@ -91,6 +91,9 @@ def buy():
         share_price = get_share["price"]
         cash_amount = check_user_cash_amount()
 
+        date = datetime.datetime.now()
+        date_format = date.strftime("%d-%m-%y %H:%M:%S")
+
         total = amount * share_price
         if cash_amount < total:
             return apology("Insufficient founds.")
@@ -98,6 +101,7 @@ def buy():
             db.execute("INSERT INTO stocks (name, symbol, amount, price, user_id) VALUES (:name, :symbol, :amount, :price, :user_id)", name=share_name, symbol=symbol, amount=amount, price=share_price, user_id=session["user_id"])
             new_amount = cash_amount - total
             db.execute("UPDATE users SET cash = :new_total WHERE id = :user_id", new_total=new_amount, user_id=session["user_id"])
+            db.execute("INSERT INTO history (symbol, amount, price, date, user_id) VALUES (:symbol, :amount, :price, :date, :user_id)", symbol=symbol, amount=amount, price=share_price, date=date_format, user_id=session["user_id"])
             return redirect("/")
 
     else:
@@ -111,7 +115,10 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    return apology("TODO")
+
+    shares = db.execute("SELECT * FROM history WHERE user_id = :user_id", user_id = session["user_id"])
+
+    return render_template("history.html", shares=shares)
 
     # Display a table with history of all transactions,
     # listing row by row every buy and every sell
@@ -234,7 +241,7 @@ def sell():
                 db.execute("UPDATE stocks SET amount = :new_val WHERE user_id = :user_id", new_val=stocks_available[0]["amount"]-int(amount_to_sell), user_id=session["user_id"])
                 db.execute("UPDATE users SET cash = :new_val WHERE id = :user_id", new_val=user_cash[0]["cash"]+price, user_id=session["user_id"])
 
-                db.execute("INSERT INTO history (symbol, amount, price, date, user_id) VALUES (:symbol, :amount, :price, :date, :user_id)", symbol=selected_stock[0]["symbol"], amount=int(amount_to_sell), price=price, date=date_format, user_id=session["user_id"])
+                db.execute("INSERT INTO history (symbol, amount, price, date, user_id) VALUES (:symbol, :amount, :price, :date, :user_id)", symbol=selected_stock[0]["symbol"], amount=int(amount_to_sell) * -1, price=price, date=date_format, user_id=session["user_id"])
 
 
 
