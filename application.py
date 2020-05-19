@@ -237,11 +237,12 @@ def sell():
                 db.execute("INSERT INTO history (symbol, amount, price, date, user_id) VALUES (:symbol, :amount, :price, :date, :user_id)", symbol=selected_stock[0]["symbol"], amount=int(amount_to_sell), price=price, date=date_format, user_id=session["user_id"])
 
 
-                amount_left = db.execute("SELECT' amount FROM stocks WHERE user_id = :user_id AND id = :stock_id", user_id=session["user_id"], stock_id=stock_to_sell)
-               # print(amount_left)
-                if amount_left == 0:
+
+                amount_left = db.execute("SELECT amount FROM stocks WHERE user_id = :user_id AND id = :stock_id", user_id=session["user_id"], stock_id=stock_to_sell)
+                print(amount_left)
+                if amount_left[0]["amount"] == 0:
                     db.execute("UPDATE stocks SET is_sold = :new_val WHERE user_id = :user_id AND id = :stock_id ", new_val = 1, user_id=session["user_id"], stock_id=stock_to_sell)
-                
+
                 return redirect("/")
 
     else:
