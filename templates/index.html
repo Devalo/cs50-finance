@@ -25,9 +25,9 @@
                 <td>{{share.symbol}}</td>
                 <td>{{share.name}}</td>
                 <td>{{share.amount}}</td>
-                <td>${{share.price|round}}</td>
-                <td>{{lookup(share.symbol)["price"]}}</td>
-                <td>${{lookup(share.symbol)["price"] * share.amount}}</td>
+                <td>${{share.price|round(2, 'common')}}</td>
+                <td>{{(lookup(share.symbol)["price"])|round(2, 'common')}}</td>
+                <td>${{(lookup(share.symbol)["price"] * share.amount)|round(2, 'common')}}</td>
             </tr>
             {% endfor %}
             <tr>
@@ -36,7 +36,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>${{ total }}</td>
+                <td>${{ total|round(2, 'common') }}</td>
             </tr>
             <tr>
                 <td></td>
@@ -44,7 +44,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><strong>{{ (cash_left + total)|round }}</strong></td>
+                <td><strong>{{ (cash_left + total)|round(2, "common") }}</strong></td>
             </tr>
         </tbody>
     </table>

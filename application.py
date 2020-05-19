@@ -49,7 +49,7 @@ if not os.environ.get("API_KEY"):
 def index():
     """Show portfolio of stocks"""
 
-    user_shares = db.execute("SELECT * FROM stocks WHERE user_id = :user_id", user_id=session["user_id"])
+    user_shares = db.execute("SELECT * FROM stocks WHERE user_id = :user_id AND is_sold = 0", user_id=session["user_id"])
     cash_amount = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
 
     tot = []
@@ -210,7 +210,7 @@ def register():
 def sell():
     """Sell shares of stock"""
 
-    stocks = db.execute("SELECT id, symbol FROM stocks WHERE user_id = :user_id", user_id=session["user_id"])
+    stocks = db.execute("SELECT id, symbol, amount FROM stocks WHERE user_id = :user_id AND is_sold = 0", user_id=session["user_id"])
 
     if request.method == "POST":
 

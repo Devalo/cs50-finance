@@ -10,7 +10,7 @@
         <div class="form-group">
             <select name="symbol" id="select-stock" class="form-control">
                 {% for stock in stocks: %}
-                <option value='{{stock["id"]}}'>{{ stock["symbol"].upper() }} | {{stocks|count}} stocks available </option>
+                <option value='{{stock["id"]}}'>{{ stock["symbol"].upper() }} | {{stock.amount}} stocks available </option>
                 {% endfor %}
             </select>
         </div>
