@@ -21,7 +21,7 @@
             <tr>
                 <td>{{share.symbol}}</td>
                 <td>{{share.amount}}</td>
-                <td>{{share.price}}</td>
+                <td>${{share.price|round(2, 'common')}}</td>
                 <td>{{share.date}}</td>
 
             </tr>

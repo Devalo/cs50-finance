@@ -110,6 +110,28 @@ def buy():
     # When form is submitted via POST, purchase the stock so long
     # as the user can afford it.
 
+@app.route("/deposit", methods=["GET", "POST"])
+@login_required
+def deposit():
+    if request.method == "POST":
+
+        deposit_amount = request.form.get("amount")
+        current = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
+
+
+        print(current)
+
+        if int(deposit_amount) <= 0:
+            return apology("You need to enter a positive number")
+
+        db.execute("UPDATE users SET cash = :new_val WHERE id = :user_id", new_val = current[0]["cash"]+int(deposit_amount), user_id=session["user_id"])
+
+        return redirect("/")
+    else:
+        return render_template("deposit.html")
+
+
+
 
 @app.route("/history")
 @login_required
